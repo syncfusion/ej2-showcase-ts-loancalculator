@@ -19,3 +19,9 @@ To run the sample, use the below command
 ```
 gulp serve
 ```
+
+## Demo
+
+#### <a href="https://ej2.syncfusion.com/showcase/typescript/loancalculator/" target="_blank">https://ej2.syncfusion.com/showcase/typescript/loancalculator/</a>
+
+Check all the showcase samples from <a href="https://ej2.syncfusion.com/home/index.html" target="_blank">here</a>.

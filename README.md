@@ -24,4 +24,4 @@ gulp serve
 
 #### <a href="https://ej2.syncfusion.com/showcase/typescript/loancalculator/" target="_blank">https://ej2.syncfusion.com/showcase/typescript/loancalculator/</a>
 
-Check all the showcase samples from <a href="https://ej2.syncfusion.com/home/index.html" target="_blank">here</a>.
+Check all the showcase samples from <a href="https://ej2.syncfusion.com/home/index.html" target="_blank">here</a> and also check out the [single page application example](https://blog.syncfusion.com/post/single-page-application-example-using-essential-js-2.aspx) blog.

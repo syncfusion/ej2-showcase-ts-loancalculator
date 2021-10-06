@@ -1,7 +1,7 @@
 /**
  *  Default page code.
  */
-import { Slider, SliderTickEventArgs } from '@syncfusion/ej2-inputs';
+import { Slider, SliderTickRenderedEventArgs } from '@syncfusion/ej2-inputs';
 import { NumericTextBox, ChangeEventArgs } from '@syncfusion/ej2-inputs';
 import { RadioButton } from '@syncfusion/ej2-buttons';
 import { closest, Internationalization, isNullOrUndefined as isNOU } from '@syncfusion/ej2-base';
@@ -83,9 +83,13 @@ function renderSliderControls(): void {
         changed: () => {
             refreshUI();
         },
-        renderingTicks: (args: SliderTickEventArgs) => {
-            let num: number = Number(args.value) / 1000;
-            args.text = num === 0 ?  ('' + num) : (num + 'K');
+        renderedTicks: (args: SliderTickRenderedEventArgs) => {
+            let li: NodeListOf<Element> = args.ticksWrapper.getElementsByClassName('e-large');
+            for (let i: number = 0; i < li.length; ++i) {
+                let ele: HTMLElement = (li[i].querySelectorAll('.e-tick-value')[0] as HTMLElement);
+                let num: number = parseInt(ele.innerText.substring(1).replace(/,/g , ''), 10) / 1000;
+                ele.innerText = num === 0 ?  ('' + num) : (num + 'K');
+            }
         }
     });
     pricipalObj2.appendTo('#pricipal');

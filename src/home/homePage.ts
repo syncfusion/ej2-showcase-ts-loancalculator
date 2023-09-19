@@ -42,8 +42,8 @@ let totalPrincipalYear: number = 0;
 let totalInterestYear: number = 0;
 let tent: number;
 let inter: number;
-let dataUnits: [Object] = <[Object]>[];
-let yearWiseData: [Object] = <[Object]>[];
+let dataUnits: Object[] = [];
+let yearWiseData: Object[] = [];
 let dateObj: Date = new Date();
 let totalInterest: number = 0;
 let totalAmount: number = 0;
@@ -51,7 +51,7 @@ let totalPrincipal: number = 0;
 let endBalance: number;
 let beginBalance: number;
 let yearTotal: number = 0;
-let monthNames: [string] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+let monthNames: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 let datepickerObj: DatePicker;
 let intl: Internationalization = new Internationalization();
 let legendSettings: Object = {
@@ -84,7 +84,7 @@ function renderSliderControls(): void {
             refreshUI();
         },
         renderedTicks: (args: SliderTickRenderedEventArgs) => {
-            let li: NodeListOf<Element> = args.ticksWrapper.getElementsByClassName('e-large');
+            let li: any = args.ticksWrapper.getElementsByClassName('e-large');
             for (let i: number = 0; i < li.length; ++i) {
                 let ele: HTMLElement = (li[i].querySelectorAll('.e-tick-value')[0] as HTMLElement);
                 let num: number = parseInt(ele.innerText.substring(1).replace(/,/g , ''), 10) / 1000;
@@ -258,7 +258,7 @@ function renderVisalComponents(): void {
             selectedTheme = selectedTheme ? selectedTheme : 'Material';
             args.accumulation.theme = <AccumulationTheme>(selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1));
         },
-        border: '#27304c',
+        border: {color: '#27304c'},
         background: '#27304c'
     });
     pie.appendTo('#payment_pieChart');
@@ -283,28 +283,31 @@ function renderVisalComponents(): void {
     });
     grid.appendTo('#scheduleGrid');
     (grid.element as HTMLElement).addEventListener('click', (args: MouseEvent) => {
-        let target: Element = args.target as Element;
-        if (target.classList.contains('e-row-toggle') || target.parentElement.querySelector('.e-row-toggle')) {
-            target = target.parentElement.querySelector('.e-row-toggle') ? target.parentElement.querySelector('.e-row-toggle') : target;
-            if (target.classList.contains('e-icon-gdownarrow')) {
-                target.classList.remove('e-icon-gdownarrow');
-                target.classList.add('e-icon-grightarrow');
-                grid.detailRowModule.collapse(parseInt((closest(target, 'tr') as HTMLElement).getAttribute('aria-rowindex'), 10));
-            } else {
-                target.classList.remove('e-icon-grightarrow');
-                target.classList.add('e-icon-gdownarrow');
-                grid.detailRowModule.expand(parseInt((closest(target, 'tr') as HTMLElement).getAttribute('aria-rowindex'), 10));
+        const target = args.target as HTMLElement;
+        if (target.classList.contains('e-row-toggle') || target.parentElement?.querySelector('.e-row-toggle')) {
+            const rowElement = closest(target, 'tr') as HTMLElement;
+            const rowIndex = parseInt(rowElement.getAttribute('aria-rowindex') || '', 10);
+            if (rowIndex >= 0) {
+                if (target.classList.contains('e-icon-gdownarrow')) {
+                    target.classList.remove('e-icon-gdownarrow');
+                    target.classList.add('e-icon-grightarrow');
+                    grid.detailRowModule.collapse(rowIndex - 1);
+                } else {
+                    target.classList.remove('e-icon-grightarrow');
+                    target.classList.add('e-icon-gdownarrow');
+                    grid.detailRowModule.expand(rowIndex - 1);
+                }
             }
         }
     });
 }
 /* tslint:disable */
 function childCreated(args: any): void {
-    this.getHeaderContent().style.display = 'none';
-    this.element.style.display = 'none';
+    (grid.getHeaderContent() as HTMLElement).style.display = 'none';
+    grid.element.style.display = 'none';
 }
 function childDataBound(args: any): void {
-    this.element.style.display = '';
+    grid.element.style.display = '';
 }
 /* tslint:enable */
 
@@ -405,7 +408,7 @@ function updateChart(): void {
         height: '500px',
         palettes: ['#FB6589', '#3AC8DC', '#FFFFFF'],
         legendSettings: legendSettings, useGroupingSeparator: true,
-        border: '#27304c', background: '#27304c',
+        border: { color:'#27304c'}, background: '#27304c',
         axisLabelRender: axisLabelRender
     });
 }
@@ -416,7 +419,7 @@ function onChartMouseUp(args: IMouseEventArgs): void {
         let index: number = parseInt(id[1], 10);
         let series: Series = chart.visibleSeries[index];
         let yName: string = series.yAxisName;
-        let ySName: string;
+        let ySName: any;
         let visibility: boolean = false;
         if (series.visible) {
             for (let i: number = 0, len: number = chart.series.length; i < len; i++) {
@@ -482,18 +485,18 @@ function setInitValues(): void {
     emi = calculateEMI();
     princ = principal.value;
     tent = yearTenure ? (tenure.value * 12) : tenure.value;
-    dataUnits = <[Object]>[];
-    yearWiseData = <[Object]>[];
+    dataUnits  = [];
+    yearWiseData = [];
     dateObj = new Date(datepickerObj.value.getTime());
     totalInterest = 0;
     totalAmount = 0;
     totalPrincipal = 0;
     totalPrincipalYear = 0;
     totalInterestYear = 0;
-    document.getElementById('loan_emi').innerHTML = getCurrencyVal(tent ? Math.round(emi) : 0);
-    document.getElementById('loan_interest').innerHTML = getCurrencyVal(tent ? Math.round((emi * tent) - princ) : 0);
-    document.getElementById('loan_total_payment').innerHTML = getCurrencyVal(tent ? Math.round((emi * tent)) : 0);
-    document.getElementById('loan_principal').innerHTML = getCurrencyVal(princ);
+    (document.getElementById('loan_emi') as HTMLElement).innerHTML = getCurrencyVal(tent ? Math.round(emi) : 0);
+    (document.getElementById('loan_interest') as HTMLElement).innerHTML = getCurrencyVal(tent ? Math.round((emi * tent) - princ) : 0);
+    (document.getElementById('loan_total_payment') as HTMLElement).innerHTML = getCurrencyVal(tent ? Math.round((emi * tent)) : 0);
+    (document.getElementById('loan_principal') as HTMLElement).innerHTML = getCurrencyVal(princ);
 }
 
 function calRangeValues(): void {
@@ -636,7 +639,7 @@ function dateChanged(): void {
         refreshUI();
     }
 }
-window.default = () => {
+window.home = () => {
     renderInputControls();
     datepickerObj = new DatePicker({
         start: 'Year',
@@ -659,8 +662,8 @@ window.default = () => {
     princ = principal.value;
     tent = yearTenure ? (tenure.value * 12) : tenure.value;
     renderVisalComponents();
-    dataUnits = <[Object]>[];
-    yearWiseData = <[Object]>[];
+    dataUnits = [];
+    yearWiseData = [];
     dateObj = new Date();
     totalInterest = 0;
     totalAmount = 0;
@@ -668,7 +671,7 @@ window.default = () => {
     refreshUI();
     window.destroy = () => {
         destroyComponents();
-        window.destroy = null;
+        window.destroy = () => {};
     };
 };
 
@@ -689,7 +692,7 @@ function destroyComponents(): void {
 
 window.getDataState = () => {
     let data: DataSketch = <DataSketch>{};
-    data.dataUnits = dataUnits;
-    data.yearWiseData = yearWiseData;
+    data.dataUnits = [dataUnits];
+    data.yearWiseData = [yearWiseData];
     return data;
 };

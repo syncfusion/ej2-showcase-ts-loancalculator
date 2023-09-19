@@ -1,7 +1,3 @@
 {
-    "sasslint": ["./styles/**/*.scss"],
-    "tslint": ["./src/**/*.ts"],
-    "styleDependency": ["ej2"],
-    "ts": ["./src/**/*.ts"],
-    "isShowCase": true
+    "productOwner": "Alan Sangeeth"
 }

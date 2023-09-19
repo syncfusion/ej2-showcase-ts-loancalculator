@@ -1,60 +1,40 @@
 {
-  "name": "@syncfusion/ej2-ts-loan-calculator",
-  "version": "0.0.1",
-  "description": "Essential JS 2 - Loan Calculator",
+  "name": "@syncfusion/ej2-typescript-loan-calculator",
+  "version": "1.0.0",
+  "description": "Essential JS 2 - Loan Calculator Application",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "start": "webpack serve --mode development --open",
+  },
   "author": "Syncfusion Inc.",
   "license": "SEE LICENSE IN license",
+  "devDependencies": {
+    "@types/crossroads": "^0.0.30",
+    "@types/hasher": "^0.0.32",
+    "crossroads": "^0.12.2",
+    "css-loader": "^6.8.1",
+    "hasher": "^1.2.0",
+    "html-webpack-plugin": "^5.5.3",
+    "mini-css-extract-plugin": "^2.7.6",
+    "terser-webpack-plugin": "^5.3.9",
+    "sass": "^1.63.6",
+    "sass-loader": "^13.3.2",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
   "dependencies": {
     "@syncfusion/ej2-base": "*",
     "@syncfusion/ej2-buttons": "*",
     "@syncfusion/ej2-calendars": "*",
-    "@syncfusion/ej2-charts": "*",
-    "@syncfusion/ej2-data": "*",
-    "@syncfusion/ej2-grids": "*",
-    "@syncfusion/ej2-inputs": "*",
     "@syncfusion/ej2-lists": "*",
     "@syncfusion/ej2-popups": "*",
-    "browser-sync": "^2.23.6",
-    "crossroads": "^0.12.2",
-    "hasher": "^1.2.0"
-  },
-  "devDependencies": {
-    "@types/chai": "^3.4.28",
-    "@types/hasher": "0.0.27",
-    "@types/crossroads": "0.0.28",
-    "@types/jasmine": "^2.2.29",
-    "@types/jasmine-ajax": "^3.1.27",
-    "@types/requirejs": "^2.1.26",
-    "gulp": "^3.9.0",
-    "gulp-sass": "^3.1.0",
-    "gulp-print": "^2.0.1",
-    "gulp-tslint": "^7.0.1",
-    "gulp-sass-lint": "^1.1.1",
-    "gulp-typescript": "^2.13.0",
-    "tslint": "4.0.2",
-    "run-sequence": "2.2.0",
-    "typescript": "2.3.3",
-    "webpack": "2.5.1",
-    "webpack-stream": "^3.2.0"
-  },
-  "keywords": [
-    "ej2",
-    "syncfusion",
-    "loan-calculator",
-    "emi",
-    "emi-calculator"
-  ],
-  "scripts": {
-    "test": "gulp ci-test",
-    "compile": "gulp ci-compile",
-    "ci-publish": "gulp publish-samples",
-    "build": "gulp lint && gulp build"
-  },
-  "config": {
-    "ghooks": {
-      "pre-commit": "gulp pre-commit",
-      "pre-push": "gulp pre-push",
-      "commit-msg": "gulp commit-msg"
-    }
+    "@syncfusion/ej2-charts": "*",    
+    "@syncfusion/ej2-data": "*",
+    "@syncfusion/ej2-grids": "*",
+    "@syncfusion/ej2-inputs": "*"  
   }
 }

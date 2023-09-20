@@ -1,27 +1,27 @@
-# Essential JS 2 for TypeScript - Loan Calculator
+# Loan Calculator Showcase Sample in JavaScript
 
-This Loan calculator demo application showcases the usage of several Essential JS 2 components in a real world application scenario. You can use this application to Calculates your loan payment based on your loan amount, interest and term.
+The Loan Calculator Showcase web application sample is a practical demonstration of a loan calculator built using JavaScript and Syncfusion's Essential JS 2 library. This showcase provides users with a user-friendly interface to calculate and visualize various aspects of loan repayment, making it a valuable tool for both individuals and financial institution
 
-## Deployment
+## Installation
 
-### Install
+To install the application dependencies, use the following command:
 
-To install all dependent packages, use the below command
-
-```
+```sh
 npm install
 ```
 
-### Run
+## Build the application
 
-To run the sample, use the below command
+To Build the application, use the below command,
 
+```sh
+npm run build
 ```
-gulp serve
+
+## Run the application
+
+To run the sample in the browser with live reload, use the following command:
+
+```sh
+npm run start
 ```
-
-## Demo
-
-#### <a href="https://ej2.syncfusion.com/showcase/typescript/loancalculator/" target="_blank">https://ej2.syncfusion.com/showcase/typescript/loancalculator/</a>
-
-Check all the showcase samples from <a href="https://ej2.syncfusion.com/home/index.html" target="_blank">here</a> and also check out the [single page application example](https://blog.syncfusion.com/post/single-page-application-example-using-essential-js-2.aspx) blog.

@@ -35,6 +35,7 @@
     "@syncfusion/ej2-charts": "*",    
     "@syncfusion/ej2-data": "*",
     "@syncfusion/ej2-grids": "*",
-    "@syncfusion/ej2-inputs": "*"  
+    "@syncfusion/ej2-inputs": "*",
+    "@syncfusion/ej2-treegrid": "*"
   }
 }

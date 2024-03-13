@@ -9,7 +9,7 @@ import {
     AccumulationChart, AccumulationLegend, PieSeries, AccumulationTooltip,
     AccumulationDataLabel, IAxisLabelRenderEventArgs
 } from '@syncfusion/ej2-charts';
-import { Grid, DetailRow } from '@syncfusion/ej2-grids';
+import { TreeGrid, DetailRow } from '@syncfusion/ej2-treegrid';
 import {
     Chart, LineSeries, DateTime, Legend, Tooltip, IAccLoadedEventArgs, AccumulationTheme, IAccPointRenderEventArgs,
     StackingColumnSeries, Crosshair, DataLabel, ColumnSeries, IMouseEventArgs, Series
@@ -20,7 +20,7 @@ import { DatePicker } from '@syncfusion/ej2-calendars';
 
 //creates a datepicker with decade view and navigate up to year view.
 Chart.Inject(LineSeries, StackingColumnSeries, Crosshair, DataLabel, ColumnSeries, DateTime, Legend, Tooltip);
-Grid.Inject(DetailRow);
+TreeGrid.Inject(DetailRow);
 AccumulationChart.Inject(AccumulationLegend, PieSeries, AccumulationTooltip, AccumulationDataLabel);
 
 declare let window: IPages;
@@ -35,7 +35,7 @@ let yearValue: RadioButton;
 let monthValue: RadioButton;
 let yearTenure: boolean = true;
 let chart: Chart;
-let grid: Grid;
+let treegrid: TreeGrid;
 let emi: number;
 let princ: number;
 let totalPrincipalYear: number = 0;
@@ -264,52 +264,27 @@ function renderVisalComponents(): void {
     pie.appendTo('#payment_pieChart');
     updateChart();
     chart.appendTo('#paymentGraph');
-    grid = new Grid({
+    treegrid = new TreeGrid({
         dataSource: [],
         columns: [
-            { field: 'year', headerText: 'Year', minWidth: '80px', textAlign: 'Center', template: '#columntemplate' },
+            { field: 'year', headerText: 'Year/Month', minWidth: '80px', textAlign: 'Center' },
             {
-                field: 'yearTotal', format: 'C0',
-                hideAtMedia: '(min-width: 480px)', headerText: 'Payment', minWidth: '120px', textAlign: 'Center'
+                field: 'yearTotal', format: 'C0', 
+                hideAtMedia: '(min-width: 480px)', headerText: 'Payment', minWidth: '120px', textAlign: 'Center', template:'#template'
             },
             { field: 'yearPrincipal', format: 'C0', headerText: 'Principal Paid', minWidth: '120px', textAlign: 'Center' },
             { field: 'yearInterest', format: 'C0', headerText: 'Interest Paid', minWidth: '120px', textAlign: 'Center' },
             { field: 'endingBalance', format: 'C0', headerText: 'Balance', minWidth: '80px', textAlign: 'Center' }
         ],
         width: '100%',
-        childGrid: {
-
-        },
+        childMapping: 'childRecord',
+        treeColumnIndex: 0,
+        enableCollapseAll: true,
+        parentIdMapping: 'parentId',
+        idMapping: 'id'
     });
-    grid.appendTo('#scheduleGrid');
-    (grid.element as HTMLElement).addEventListener('click', (args: MouseEvent) => {
-        const target = args.target as HTMLElement;
-        if (target.classList.contains('e-row-toggle') || target.parentElement?.querySelector('.e-row-toggle')) {
-            const rowElement = closest(target, 'tr') as HTMLElement;
-            const rowIndex = parseInt(rowElement.getAttribute('aria-rowindex') || '', 10);
-            if (rowIndex >= 0) {
-                if (target.classList.contains('e-icon-gdownarrow')) {
-                    target.classList.remove('e-icon-gdownarrow');
-                    target.classList.add('e-icon-grightarrow');
-                    grid.detailRowModule.collapse(rowIndex - 1);
-                } else {
-                    target.classList.remove('e-icon-grightarrow');
-                    target.classList.add('e-icon-gdownarrow');
-                    grid.detailRowModule.expand(rowIndex - 1);
-                }
-            }
-        }
-    });
+    treegrid.appendTo('#scheduleGrid');
 }
-/* tslint:disable */
-function childCreated(args: any): void {
-    (grid.getHeaderContent() as HTMLElement).style.display = 'none';
-    grid.element.style.display = 'none';
-}
-function childDataBound(args: any): void {
-    grid.element.style.display = '';
-}
-/* tslint:enable */
 
 function updateChart(): void {
     chart = new Chart({
@@ -478,7 +453,7 @@ function refreshUI(): void {
     calRangeValues();
     renderControls();
     chart.refresh();
-    grid.refresh();
+    treegrid.refresh();
 }
 
 function setInitValues(): void {
@@ -510,22 +485,28 @@ function calRangeValues(): void {
         totalPrincipalYear += parseFloat((emi - inter).toFixed(2));
         totalInterestYear += inter;
         dataUnits.push({
+            id: (i + 1),
             month: monthNames[dateObj.getMonth()],
             index: (i + 1),
             totalInterest: Math.round(totalInterest),
             totalAmount: totalAmount,
             emi: Math.round(emi),
-            year: dateObj.getFullYear(),
+            year: monthNames[dateObj.getMonth()],
             beginningBalance: Math.round(princ),
             interest: Math.round(inter),
             pricipalPaid: Math.round((emi - inter)),
-            endingBalance: Math.round(endBalance)
+            endingBalance: Math.round(endBalance),
+            parentId: dateObj.getFullYear(),
+            yearTotal: Math.round(yearTotal),
+            yearPrincipal: totalPrincipalYear,
+            yearInterest: totalInterestYear
         });
         if (i === 0 || dateObj.getMonth() === 0) {
             beginBalance = princ;
         }
         if (dateObj.getMonth() === 11 || (i === tent - 1)) {
             yearWiseData.push({
+                id: dateObj.getFullYear(),
                 beginningBalance: Math.round(beginBalance),
                 totalInterest: Math.round(totalInterest),
                 totalPrincipal: Math.round(totalPrincipal),
@@ -535,11 +516,14 @@ function calRangeValues(): void {
                 yearN: new Date(dateObj.getFullYear(), 0, 1),
                 year: dateObj.getFullYear(),
                 yearPrincipal: totalPrincipalYear,
-                yearInterest: totalInterestYear
+                yearInterest: totalInterestYear,
+                childRecord: dataUnits,
+                parentId: null,
             });
             yearTotal = 0;
             totalPrincipalYear = 0;
             totalInterestYear = 0;
+            dataUnits = [];
         }
         princ = endBalance;
         if (i < tent - 1) {
@@ -549,24 +533,9 @@ function calRangeValues(): void {
 }
 
 function renderControls(): void {
-    grid.setProperties({
-        dataSource: yearWiseData, childGrid: {
-            created: childCreated,
-            dataBound: childDataBound,
-            queryString: 'year',
-            columns: [
-                { field: 'month', headerText: 'Month', textAlign: 'center', minWidth: '80px' },
-                {
-                    field: 'emi', format: 'C0',
-                    hideAtMedia: '(min-width: 480px)', headerText: 'Payment', minWidth: '80px', textAlign: 'center'
-                },
-                { field: 'pricipalPaid', format: 'C0', headerText: 'Principal Paid', minWidth: '80px', textAlign: 'center' },
-                { field: 'interest', format: 'C0', headerText: 'Interest Paid', minWidth: '80px', textAlign: 'center' },
-                { field: 'endingBalance', format: 'C0', headerText: 'Balance', minWidth: '80px', textAlign: 'center' }
-            ],
-            dataSource: dataUnits
-        }
-    });
+    treegrid.setProperties({
+        dataSource: yearWiseData
+    })
     chart.setProperties({
         //Initializing Chart Series
         enableSideBySidePlacement: false,
@@ -684,7 +653,7 @@ function destroyComponents(): void {
     tenure.destroy();
     pie.destroy();
     chart.destroy();
-    grid.destroy();
+    treegrid.destroy();
     yearValue.destroy();
     monthValue.destroy();
     datepickerObj.destroy();

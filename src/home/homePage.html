@@ -130,7 +130,10 @@
         </linearGradient>
     </defs>
 </svg>
-<script id="columntemplate" type="text/x-template">
-    <div class="e-icons e-icon-grightarrow e-row-toggle"></div>
-    <span style="padding-left: 12px;">${year}</span>
+<script type="text/x-template" id="template">
+    ${if(parentItem)}
+    <span>${formatCurrency(emi)}</span>
+    ${else}
+    <span>${formatCurrency(yearTotal)}</span>
+    ${/if}
 </script>

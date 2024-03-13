@@ -19,5 +19,15 @@
   <body>
     <h2 class="header-style">Loan Calculator</h2>
     <div class="container main-content" id="content-area"></div>
+    <script>
+      function formatCurrency(value) {
+        const formatter = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+        });
+        return formatter.format(value);
+      }
+    </script>
   </body>
 </html>
